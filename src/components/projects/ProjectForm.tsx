@@ -59,13 +59,15 @@ export const ProjectForm = ({
       await onSubmit(submitData);
     } catch (err: any) {
       console.error('Error al guardar proyecto:', err);
+      console.error('Error detail completo:', JSON.stringify(err, null, 2));
       // Mostrar detalles del error del backend
       let errorMessage = 'Error al guardar el proyecto';
       if (err?.detail) {
         if (Array.isArray(err.detail)) {
-          errorMessage = err.detail.map((d: any) => d.msg).join(', ');
+          console.error('Error detail array:', err.detail);
+          errorMessage = err.detail.map((d: any) => `${d.loc?.join('.')}: ${d.msg}`).join(', ');
         } else {
-          errorMessage = JSON.stringify(err.detail);
+          errorMessage = `${err.detail}`;
         }
       } else if (err?.message) {
         errorMessage = err.message;

@@ -91,20 +91,23 @@ export const TaskForm = ({
       await onSubmit(data);
     } catch (err: any) {
       console.error('Error al guardar tarea:', err);
+      console.error('Error detail completo:', JSON.stringify(err, null, 2));
       // Mostrar detalles del error del backend
       let errorMessage = 'Error al guardar la tarea';
       if (err?.detail) {
         if (Array.isArray(err.detail)) {
-          errorMessage = err.detail.map((d: any) => d.msg).join(', ');
+          console.error('Error detail array:', err.detail);
+          errorMessage = err.detail.map((d: any) => `${d.loc?.join('.')}: ${d.msg}`).join(', ');
         } else {
-          errorMessage = JSON.stringify(err.detail);
+          // El detail es un string (ej: "Project not found")
+          errorMessage = `${err.detail}`;
         }
       } else if (err?.message) {
         errorMessage = err.message;
       }
-      // Si es 404, mostrar mensaje específico
-      if (err?.status === 404 || err?.response?.status === 404) {
-        errorMessage = 'El endpoint de tareas no está disponible en el backend (404)';
+      // Agregar el status code al mensaje para claridad
+      if (err?.status) {
+        errorMessage = `[${err.status}] ${errorMessage}`;
       }
       setError(errorMessage);
     } finally {
