@@ -4,6 +4,7 @@ import { ProtectedRoute } from './components/common/ProtectedRoute';
 import { Login } from './pages/Login';
 import { Register } from './pages/Register';
 import { Dashboard } from './pages/Dashboard';
+import { Projects } from './pages/Projects';
 import { ROUTES } from './utils/constants';
 import './App.css';
 
@@ -27,9 +28,7 @@ function App() {
             path={ROUTES.PROJECTS}
             element={
               <ProtectedRoute>
-                <div style={{ padding: '2rem' }}>
-                  <h1>Projects - Coming Soon</h1>
-                </div>
+                <Projects />
               </ProtectedRoute>
             }
           />

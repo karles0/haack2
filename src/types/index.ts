@@ -38,21 +38,46 @@ export interface ApiError {
   message?: string;
 }
 
-// Project types (for future implementation)
+// Project types
+export type ProjectStatus = 'ACTIVE' | 'INACTIVE' | 'ARCHIVED';
+
 export interface Project {
   id: number;
   name: string;
-  description?: string;
+  description: string;
+  status: ProjectStatus;
+  owner_id: number;
   created_at: string;
   updated_at: string;
+  tasks?: Task[];
 }
 
-// Task types (for future implementation)
+export interface CreateProjectRequest {
+  name: string;
+  description: string;
+  status: ProjectStatus;
+}
+
+export interface UpdateProjectRequest {
+  name?: string;
+  description?: string;
+  status?: ProjectStatus;
+}
+
+export interface ProjectsListResponse {
+  projects: Project[];
+  total_pages: number;
+  current_page: number;
+}
+
+// Task types
+export type TaskStatus = 'TODO' | 'IN_PROGRESS' | 'DONE';
+
 export interface Task {
   id: number;
   title: string;
-  description?: string;
-  status: 'pending' | 'in_progress' | 'completed';
+  description: string;
+  status: TaskStatus;
   project_id: number;
   created_at: string;
   updated_at: string;
