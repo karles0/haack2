@@ -40,7 +40,21 @@ export const ProjectForm = ({
     setIsLoading(true);
 
     try {
-      const submitData = { name, description, status };
+      // Ensure proper data types and trimmed strings
+      const submitData = {
+        name: name.trim(),
+        description: description.trim(),
+        status,
+      };
+
+      // Validate that required fields are not empty
+      if (!submitData.name) {
+        throw new Error('El nombre del proyecto es requerido');
+      }
+      if (!submitData.description) {
+        throw new Error('La descripción del proyecto es requerida');
+      }
+
       console.log('Enviando datos del proyecto:', submitData);
       await onSubmit(submitData);
     } catch (err: any) {

@@ -51,16 +51,27 @@ export const TaskForm = ({
     setIsLoading(true);
 
     try {
+      // Build task data object, ensuring proper types
       const data: any = {
-        title,
-        description,
+        title: title.trim(),
+        description: description.trim(),
         priority,
         due_date: dueDate || null,
-        assigned_to: assignedTo ? parseInt(assignedTo) : null,
+        assigned_to: assignedTo && assignedTo.trim() ? parseInt(assignedTo) : null,
       };
 
       if (!task) {
-        data.project_id = parseInt(selectedProjectId);
+        // For new tasks, include project_id
+        const projectId = parseInt(selectedProjectId);
+        if (isNaN(projectId)) {
+          throw new Error('ID de proyecto inválido');
+        }
+        data.project_id = projectId;
+      }
+
+      // Validate assigned_to if provided
+      if (data.assigned_to !== null && isNaN(data.assigned_to)) {
+        throw new Error('ID de usuario asignado inválido');
       }
 
       console.log('Enviando datos de tarea:', data);
