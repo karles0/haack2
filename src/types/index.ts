@@ -71,14 +71,55 @@ export interface ProjectsListResponse {
 }
 
 // Task types
-export type TaskStatus = 'TODO' | 'IN_PROGRESS' | 'DONE';
+export type TaskStatus = 'TODO' | 'IN_PROGRESS' | 'COMPLETED';
+export type TaskPriority = 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT';
 
 export interface Task {
   id: number;
   title: string;
   description: string;
   status: TaskStatus;
+  priority: TaskPriority;
   project_id: number;
+  assigned_to: number | null;
+  due_date: string | null;
   created_at: string;
   updated_at: string;
+}
+
+export interface CreateTaskRequest {
+  title: string;
+  description: string;
+  project_id: number;
+  priority: TaskPriority;
+  due_date?: string | null;
+  assigned_to?: number | null;
+}
+
+export interface UpdateTaskRequest {
+  title?: string;
+  description?: string;
+  status?: TaskStatus;
+  priority?: TaskPriority;
+  due_date?: string | null;
+  assigned_to?: number | null;
+}
+
+export interface UpdateTaskStatusRequest {
+  status: TaskStatus;
+}
+
+export interface TasksListResponse {
+  tasks: Task[];
+  total_pages: number;
+  current_page: number;
+}
+
+export interface TaskFilters {
+  project_id?: number;
+  status?: TaskStatus;
+  priority?: TaskPriority;
+  assigned_to?: number;
+  page?: number;
+  limit?: number;
 }

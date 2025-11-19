@@ -5,6 +5,7 @@ import { Login } from './pages/Login';
 import { Register } from './pages/Register';
 import { Dashboard } from './pages/Dashboard';
 import { Projects } from './pages/Projects';
+import { Tasks } from './pages/Tasks';
 import { ROUTES } from './utils/constants';
 import './App.css';
 
@@ -36,9 +37,7 @@ function App() {
             path={ROUTES.TASKS}
             element={
               <ProtectedRoute>
-                <div style={{ padding: '2rem' }}>
-                  <h1>Tasks - Coming Soon</h1>
-                </div>
+                <Tasks />
               </ProtectedRoute>
             }
           />
