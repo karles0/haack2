@@ -2,7 +2,8 @@ import { useState, useEffect, type FormEvent } from 'react';
 import { Input } from '../common/Input';
 import { Button } from '../common/Button';
 import { projectService } from '../../services/projectService';
-import type { Task, TaskPriority, Project, CreateTaskRequest, UpdateTaskRequest, ApiError } from '../../types';
+import { teamService } from '../../services/teamService';
+import type { Task, TaskPriority, Project, CreateTaskRequest, UpdateTaskRequest, ApiError, TeamMember } from '../../types';
 
 interface TaskFormProps {
   task?: Task;
@@ -33,6 +34,8 @@ export const TaskForm = ({
   );
   const [projects, setProjects] = useState<Project[]>([]);
   const [loadingProjects, setLoadingProjects] = useState(false);
+  const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
+  const [loadingMembers, setLoadingMembers] = useState(false);
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -48,11 +51,12 @@ export const TaskForm = ({
     }
   }, [task]);
 
-  // Load projects for new tasks
+  // Load projects and team members
   useEffect(() => {
     if (!task) {
       loadProjects();
     }
+    loadTeamMembers();
   }, [task]);
 
   const loadProjects = async () => {
@@ -66,6 +70,19 @@ export const TaskForm = ({
       setError('Error al cargar los proyectos');
     } finally {
       setLoadingProjects(false);
+    }
+  };
+
+  const loadTeamMembers = async () => {
+    setLoadingMembers(true);
+    try {
+      const response = await teamService.getTeamMembers();
+      setTeamMembers(response.members);
+    } catch (error) {
+      console.error('Error loading team members:', error);
+      // No mostramos error aquí para no bloquear el formulario
+    } finally {
+      setLoadingMembers(false);
     }
   };
 
@@ -267,14 +284,42 @@ export const TaskForm = ({
         onChange={(e) => setDueDate(e.target.value)}
       />
 
-      <Input
-        type="number"
-        label="Asignado a (ID de Usuario)"
-        placeholder="Dejar vacío si no está asignado"
-        value={assignedTo}
-        onChange={(e) => setAssignedTo(e.target.value)}
-        min="1"
-      />
+      <div style={{ marginBottom: '1rem' }}>
+        <label
+          style={{
+            display: 'block',
+            marginBottom: '0.5rem',
+            fontWeight: '500',
+            color: '#333',
+          }}
+        >
+          Asignar a
+        </label>
+        <select
+          value={assignedTo}
+          onChange={(e) => setAssignedTo(e.target.value)}
+          disabled={loadingMembers}
+          style={{
+            width: '100%',
+            padding: '0.75rem',
+            fontSize: '1rem',
+            border: '1px solid #d1d5db',
+            borderRadius: '0.375rem',
+            outline: 'none',
+            backgroundColor: loadingMembers ? '#f3f4f6' : 'white',
+            boxSizing: 'border-box',
+          }}
+        >
+          <option value="">
+            {loadingMembers ? 'Cargando usuarios...' : 'Sin asignar'}
+          </option>
+          {teamMembers.map((member) => (
+            <option key={member.id} value={member.id}>
+              {member.name} ({member.email})
+            </option>
+          ))}
+        </select>
+      </div>
 
       <div
         style={{

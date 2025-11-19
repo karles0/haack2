@@ -42,7 +42,7 @@ export interface ApiError {
 }
 
 // Project types
-export type ProjectStatus = 'ACTIVE' | 'INACTIVE' | 'ARCHIVED';
+export type ProjectStatus = 'ACTIVE' | 'COMPLETED' | 'ON_HOLD';
 
 export interface Project {
   id: number;

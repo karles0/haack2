@@ -161,8 +161,8 @@ export const ProjectForm = ({
           }}
         >
           <option value="ACTIVE">Activo</option>
-          <option value="INACTIVE">Inactivo</option>
-          <option value="ARCHIVED">Archivado</option>
+          <option value="COMPLETED">Completado</option>
+          <option value="ON_HOLD">En Espera</option>
         </select>
       </div>
 
